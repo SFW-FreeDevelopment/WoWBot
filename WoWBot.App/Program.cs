@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
@@ -7,6 +9,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReminderBot.App.Services;
 
 namespace ReminderBot.App
 {
@@ -25,7 +28,8 @@ namespace ReminderBot.App
         public static async Task RunBotAsync()
         {
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -36,6 +40,9 @@ namespace ReminderBot.App
                 .AddSingleton(_commands)
                 .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
                 .AddSingleton<IConfiguration>(_ => configuration)
+                .AddScoped<ITokenService, TokenService>()
+                .AddScoped<ICharacterService, CharacterService>()
+                .AddTransient<HttpClient>()
                 .BuildServiceProvider();
 
             //new ReminderService(reminderRepository).CheckReminders().SafeFireAndForget();
