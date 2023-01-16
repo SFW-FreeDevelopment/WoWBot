@@ -16,7 +16,7 @@ public class LevelCommand : CommandBase
     [Command("level")]
     public async Task HandleCommandAsync(string character, [Remainder] string realm)
     {
-        var profile = await _characterService.GetCharacterProfile(realm, character);
-        await ReplyAsync($"{character}'s level is {profile.Level}.");
+        var level = await _characterService.GetLevel(realm, character);
+        await ReplyAsync($"{character}'s level is {level}.");
     }
 }

@@ -9,6 +9,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReminderBot.App.Clients;
 using ReminderBot.App.Services;
 
 namespace ReminderBot.App
@@ -40,9 +41,11 @@ namespace ReminderBot.App
                 .AddSingleton(_commands)
                 .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
                 .AddSingleton<IConfiguration>(_ => configuration)
-                .AddScoped<ITokenService, TokenService>()
+                .AddScoped<ITokenClient, TokenClient>()
+                .AddScoped<IProfileClient, ProfileClient>()
                 .AddScoped<ICharacterService, CharacterService>()
                 .AddTransient<HttpClient>()
+                .AddMemoryCache()
                 .BuildServiceProvider();
 
             //new ReminderService(reminderRepository).CheckReminders().SafeFireAndForget();

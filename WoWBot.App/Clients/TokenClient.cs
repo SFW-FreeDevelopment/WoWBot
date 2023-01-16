@@ -5,29 +5,35 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using ReminderBot.App.Models;
 
-namespace ReminderBot.App.Services;
+namespace ReminderBot.App.Clients;
 
-public interface ITokenService
+public interface ITokenClient
 {
     Task<string> GetToken();
 }
 
-public class TokenService : ITokenService
+public class TokenClient : ITokenClient
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    private readonly IMemoryCache _memoryCache;
     
-    public TokenService(HttpClient httpClient, IConfiguration configuration)
+    public TokenClient(HttpClient httpClient, IConfiguration configuration, IMemoryCache memoryCache)
     {
         _httpClient = httpClient;
         _configuration = configuration;
+        _memoryCache = memoryCache;
     }
     
     public async Task<string> GetToken()
     {
+        const string cacheKey = "accessToken";
+        if (_memoryCache.TryGetValue<string>(cacheKey, out var accessToken)) return accessToken;
+        
         var username = _configuration["BattleNet:ClientId"];
         var password = _configuration["BattleNet:ClientSecret"];
         var authorization = Convert.ToBase64String(Encoding.Default.GetBytes($"{username}:{password}"));
@@ -49,6 +55,7 @@ public class TokenService : ITokenService
         var contentString = await response.Content.ReadAsStringAsync();
         
         var deserializedResponse = JsonSerializer.Deserialize<GetTokenResponse>(contentString);
+        _memoryCache.Set(cacheKey, deserializedResponse.AccessToken, TimeSpan.FromHours(12));
         return deserializedResponse.AccessToken;
     }
 }

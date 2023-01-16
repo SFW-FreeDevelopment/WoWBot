@@ -1,54 +1,39 @@
-﻿using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using ReminderBot.App.Clients;
 using ReminderBot.App.Models;
 
 namespace ReminderBot.App.Services;
 
 public interface ICharacterService
 {
-    Task<GetCharacterProfileSummaryResponse> GetCharacterProfile(string realm, string character);
     Task<int> GetAverageItemLevel(string realm, string character);
+    Task<int> GetLevel(string realm, string character);
 }
 
 public class CharacterService : ICharacterService
 {
-    private readonly HttpClient _httpClient;
-    private readonly ITokenService _tokenService;
+    private readonly IProfileClient _profileClient;
     
-    public CharacterService(HttpClient httpClient, ITokenService tokenService)
+    public CharacterService(IProfileClient profileClient, IMemoryCache memoryCache)
     {
-        _httpClient = httpClient;
-        _tokenService = tokenService;
+        _profileClient = profileClient;
     }
-
+    
     public async Task<GetCharacterProfileSummaryResponse> GetCharacterProfile(string realm, string character)
     {
-        realm = HttpUtility.UrlEncode(realm.ToLower());
-        character = HttpUtility.UrlEncode(character.ToLower());
-        
-        var token = await _tokenService.GetToken();
-        
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri($"https://us.api.blizzard.com/profile/wow/character/{realm}/{character}?namespace=profile-us&locale=en_US&access_token={token}")
-        };
-        
-        var response = await _httpClient.SendAsync(request);
-        if (!response.IsSuccessStatusCode) return null;
-
-        var contentString = await response.Content.ReadAsStringAsync();
-        
-        var deserializedResponse = JsonSerializer.Deserialize<GetCharacterProfileSummaryResponse>(contentString);
-        return deserializedResponse;
+        return await _profileClient.GetCharacterProfile(realm, character);
     }
-
+    
     public async Task<int> GetAverageItemLevel(string realm, string character)
     {
-        var characterProfileSummary = await GetCharacterProfile(realm, character);
-        return characterProfileSummary.EquippedItemLevel;
+        var profile = await _profileClient.GetCharacterProfile(realm, character);
+        return profile.EquippedItemLevel;
+    }
+    
+    public async Task<int> GetLevel(string realm, string character)
+    {
+        var profile = await _profileClient.GetCharacterProfile(realm, character);
+        return profile.Level;
     }
 }
