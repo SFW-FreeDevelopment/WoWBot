@@ -76,7 +76,7 @@ namespace ReminderBot.App
                 return;
             }
             argPos = 0;
-            if (message.HasStringPrefix("<@1002374960129507358> ", ref argPos))
+            if (message.HasStringPrefix("<@1064410926289260594> ", ref argPos))
             {
                 await Execute();
                 return;
