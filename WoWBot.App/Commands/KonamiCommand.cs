@@ -6,7 +6,7 @@ namespace ReminderBot.App.Commands;
 public class KonamiCommand : CommandBase
 {
     [Command("konami")]
-    public async Task HandleCommandAsync()
+    public async Task Command()
     {
         await ReplyAsync("⬆⬆⬇⬇⬅➡⬅➡🅱🅰");
     }

@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using ReminderBot.App.Exceptions;
 using ReminderBot.App.Models;
 
 namespace ReminderBot.App.Clients;
@@ -52,6 +53,8 @@ public class TokenClient : ITokenClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authorization);
         
         var response = await _httpClient.SendAsync(request);
+        if (!response.IsSuccessStatusCode) throw new BattleNetApiException("Failed to authenticate against BattleNet.");
+        
         var contentString = await response.Content.ReadAsStringAsync();
         
         var deserializedResponse = JsonSerializer.Deserialize<GetTokenResponse>(contentString);

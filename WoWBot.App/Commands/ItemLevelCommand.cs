@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord.Commands;
+using ReminderBot.App.Exceptions;
 using ReminderBot.App.Services;
 
 namespace ReminderBot.App.Commands;
@@ -14,9 +16,12 @@ public class ItemLevelCommand : CommandBase
     }
     
     [Command("ilvl")]
-    public async Task HandleCommandAsync(string character, [Remainder] string realm)
+    public async Task Command(string character, [Remainder] string realm = null)
     {
-        var level = await _characterService.GetAverageItemLevel(realm, character);
-        await ReplyAsync($"{character}'s average equipped item level is {level}.");
+        await HandleCommandAsync(async () =>
+        {
+            var level = await _characterService.GetAverageItemLevel(realm, character);
+            await ReplyAsync($"{character}'s average equipped item level is {level}.");
+        });
     }
 }

@@ -6,7 +6,7 @@ namespace ReminderBot.App.Commands;
 public class PingCommand : CommandBase
 {
     [Command("ping")]
-    public async Task HandleCommandAsync()
+    public async Task Command()
     {
         await ReplyAsync("I am pinging the server.");
     }

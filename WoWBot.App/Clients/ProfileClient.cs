@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Caching.Memory;
+using ReminderBot.App.Exceptions;
 using ReminderBot.App.Models;
 
 namespace ReminderBot.App.Clients;
@@ -43,7 +44,7 @@ public class ProfileClient : IProfileClient
         };
         
         var response = await _httpClient.SendAsync(request);
-        if (!response.IsSuccessStatusCode) return null;
+        if (!response.IsSuccessStatusCode) throw new BattleNetApiException("Failed to fetch character.");
 
         var contentString = await response.Content.ReadAsStringAsync();
         

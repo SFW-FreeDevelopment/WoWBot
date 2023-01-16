@@ -44,6 +44,7 @@ namespace ReminderBot.App
                 .AddScoped<ITokenClient, TokenClient>()
                 .AddScoped<IProfileClient, ProfileClient>()
                 .AddScoped<ICharacterService, CharacterService>()
+                .AddScoped<IFavoriteService, FavoriteService>()
                 .AddTransient<HttpClient>()
                 .AddMemoryCache()
                 .BuildServiceProvider();
