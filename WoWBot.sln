@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.App", "WoWBot.App\WoWBot.App.csproj", "{CBE64ED5-1BAD-4D0D-A138-169A9DF5A74F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBE64ED5-1BAD-4D0D-A138-169A9DF5A74F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBE64ED5-1BAD-4D0D-A138-169A9DF5A74F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBE64ED5-1BAD-4D0D-A138-169A9DF5A74F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBE64ED5-1BAD-4D0D-A138-169A9DF5A74F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
