@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
 using ReminderBot.App.Services;
+using WoWBot.App.Commands.Abstractions;
 
-namespace ReminderBot.App.Commands;
+namespace WoWBot.App.Commands.Realm;
 
 public class GetRealmCommand : CommandBase
 {
@@ -16,7 +17,10 @@ public class GetRealmCommand : CommandBase
     [Command("getrealm")]
     public async Task Command()
     {
-        var realm = _favoriteService.GetFavoriteRealm();
-        await ReplyAsync($"Favorite realm is {realm}.");
+        await HandleCommandAsync(async () =>
+        {
+            var realm = _favoriteService.GetFavoriteRealm();
+            await ReplyAsync($"Favorite realm is {realm}.");
+        });
     }
 }

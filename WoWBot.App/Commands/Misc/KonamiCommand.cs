@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
+using WoWBot.App.Commands.Abstractions;
 
-namespace ReminderBot.App.Commands;
+namespace WoWBot.App.Commands.Misc;
 
 public class KonamiCommand : CommandBase
 {

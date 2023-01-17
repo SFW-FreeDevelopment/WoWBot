@@ -5,13 +5,14 @@ using Discord.Commands;
 using Discord.WebSocket;
 using ReminderBot.App.Exceptions;
 
-namespace ReminderBot.App.Commands;
+namespace WoWBot.App.Commands.Abstractions;
 
 public abstract class CommandBase : ModuleBase<SocketCommandContext>
 {
-    protected SocketUser User => Context.Message.Author;
-    protected IGuildUser GuildUser => (IGuildUser)User;
-    protected string Mention => User.Mention;
+    public SocketUser User => Context.Message.Author;
+    public IGuildUser GuildUser => (IGuildUser)User;
+    public string Mention => User.Mention;
+    public string UserId => User.Id.ToString();
 
     protected async Task HandleCommandAsync(Func<Task> action)
     {
@@ -20,6 +21,10 @@ public abstract class CommandBase : ModuleBase<SocketCommandContext>
             await action();
         }
         catch (BattleNetApiException e)
+        {
+            await ReplyAsync(e.Message);
+        }
+        catch (FavoriteException e)
         {
             await ReplyAsync(e.Message);
         }
